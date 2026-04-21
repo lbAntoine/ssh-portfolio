@@ -8,6 +8,7 @@ import (
 
 	"github.com/charmbracelet/log"
 	sshsrv "github.com/lbAntoine/ssh-portfolio/internal/ssh"
+	"github.com/lbAntoine/ssh-portfolio/internal/ui/styles"
 )
 
 func main() {
@@ -17,7 +18,7 @@ func main() {
 
 	addr := ":" + *port
 
-	srv := sshsrv.NewServer(addr, *hostKey)
+	srv := sshsrv.NewServer(addr, *hostKey, styles.Minimal())
 	if srv == nil {
 		log.Error("failed to create server")
 		os.Exit(1)

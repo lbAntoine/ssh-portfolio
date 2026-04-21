@@ -1,0 +1,30 @@
+package sections_test
+
+import (
+	"strings"
+	"testing"
+
+	"github.com/lbAntoine/ssh-portfolio/internal/ui/sections"
+	"github.com/lbAntoine/ssh-portfolio/internal/ui/styles"
+)
+
+func TestWelcome_RendersName(t *testing.T) {
+	w := sections.NewWelcome(styles.Minimal(), 42)
+	if !strings.Contains(w.View(), "Antoine") {
+		t.Error("expected name 'Antoine' in welcome view")
+	}
+}
+
+func TestWelcome_RendersKoreanGreeting(t *testing.T) {
+	w := sections.NewWelcome(styles.Minimal(), 42)
+	if !strings.Contains(w.View(), "안녕하세요") {
+		t.Error("expected Korean greeting in welcome view")
+	}
+}
+
+func TestWelcome_ShowsVisitorCount(t *testing.T) {
+	w := sections.NewWelcome(styles.Minimal(), 42)
+	if !strings.Contains(w.View(), "42") {
+		t.Error("expected visitor count 42 in welcome view")
+	}
+}

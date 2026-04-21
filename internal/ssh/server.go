@@ -9,17 +9,18 @@ import (
 	lm "github.com/charmbracelet/wish/logging"
 
 	"github.com/lbAntoine/ssh-portfolio/internal/ui"
+	"github.com/lbAntoine/ssh-portfolio/internal/ui/styles"
 )
 
 // NewServer creates and configure a Wish SSH server on the given address
 // using the provided host key path
-func NewServer(addr, hostKeyPath string) *cssh.Server {
+func NewServer(addr, hostKeyPath string, theme styles.Theme) *cssh.Server {
 	s, err := wish.NewServer(
 		wish.WithAddress(addr),
 		wish.WithHostKeyPath(hostKeyPath),
 		wish.WithMiddleware(
 			bm.Middleware(func(s cssh.Session) (tea.Model, []tea.ProgramOption) {
-				return ui.NewModel(), nil
+				return ui.NewModel(theme), nil
 			}),
 			lm.Middleware(),
 		),
