@@ -12,9 +12,9 @@ type Model struct {
 }
 
 // NewModel returns an initialized root Model
-func NewModel(theme styles.Theme) Model {
+func NewModel(theme styles.Theme, visitorCount int) Model {
 	return Model{
-		welcome: sections.NewWelcome(theme, 42),
+		welcome: sections.NewWelcome(theme, visitorCount),
 	}
 }
 

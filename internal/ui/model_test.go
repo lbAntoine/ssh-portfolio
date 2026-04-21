@@ -10,7 +10,7 @@ import (
 )
 
 func TestRootModel_InitialView(t *testing.T) {
-	m := ui.NewModel(styles.Minimal())
+	m := ui.NewModel(styles.Minimal(), 42)
 	view := m.View()
 	if view == "" {
 		t.Error("expected non-empty view on init")
@@ -18,7 +18,7 @@ func TestRootModel_InitialView(t *testing.T) {
 }
 
 func TestRootModel_QuitOnQ(t *testing.T) {
-	m := ui.NewModel(styles.Minimal())
+	m := ui.NewModel(styles.Minimal(), 42)
 	_, cmd := m.Update(tea.KeyMsg{Type: tea.KeyRunes, Runes: []rune("q")})
 	if cmd == nil {
 		t.Fatal("expected a command, got nil")
@@ -29,7 +29,7 @@ func TestRootModel_QuitOnQ(t *testing.T) {
 }
 
 func TestRootModel_QuitOnCtrlC(t *testing.T) {
-	m := ui.NewModel(styles.Minimal())
+	m := ui.NewModel(styles.Minimal(), 42)
 	_, cmd := m.Update(tea.KeyMsg{Type: tea.KeyCtrlC})
 	if cmd == nil {
 		t.Fatal("expected a command, got nil")

@@ -8,19 +8,25 @@ import (
 	bm "github.com/charmbracelet/wish/bubbletea"
 	lm "github.com/charmbracelet/wish/logging"
 
+	"github.com/lbAntoine/ssh-portfolio/internal/counter"
 	"github.com/lbAntoine/ssh-portfolio/internal/ui"
 	"github.com/lbAntoine/ssh-portfolio/internal/ui/styles"
 )
 
 // NewServer creates and configure a Wish SSH server on the given address
 // using the provided host key path
-func NewServer(addr, hostKeyPath string, theme styles.Theme) *cssh.Server {
+func NewServer(addr, hostKeyPath string, theme styles.Theme, c *counter.Counter) *cssh.Server {
 	s, err := wish.NewServer(
 		wish.WithAddress(addr),
 		wish.WithHostKeyPath(hostKeyPath),
 		wish.WithMiddleware(
 			bm.Middleware(func(s cssh.Session) (tea.Model, []tea.ProgramOption) {
-				return ui.NewModel(theme), nil
+				n, err := c.Increment()
+				if err != nil {
+					log.Warn("could not increment counter", "err", err)
+					n = 0
+				}
+				return ui.NewModel(theme, n), nil
 			}),
 			lm.Middleware(),
 		),

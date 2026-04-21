@@ -7,6 +7,7 @@ import (
 	"syscall"
 
 	"github.com/charmbracelet/log"
+	"github.com/lbAntoine/ssh-portfolio/internal/counter"
 	sshsrv "github.com/lbAntoine/ssh-portfolio/internal/ssh"
 	"github.com/lbAntoine/ssh-portfolio/internal/ui/styles"
 )
@@ -14,11 +15,13 @@ import (
 func main() {
 	port := flag.String("port", "2222", "SSH server port")
 	hostKey := flag.String("host-key", "./data/host_key", "path to host key")
+	counterPath := flag.String("counter", "./data/counter.json", "path to visitor counter file")
 	flag.Parse()
 
 	addr := ":" + *port
+	c := counter.New(*counterPath)
 
-	srv := sshsrv.NewServer(addr, *hostKey, styles.Minimal())
+	srv := sshsrv.NewServer(addr, *hostKey, styles.Minimal(), c)
 	if srv == nil {
 		log.Error("failed to create server")
 		os.Exit(1)
