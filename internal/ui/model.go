@@ -43,7 +43,7 @@ func (m Model) ActiveSection() int {
 	return m.active
 }
 
-// helpVisible return whether the help overlay is shown
+// HelpVisible return whether the help overlay is shown
 func (m Model) HelpVisible() bool {
 	return m.helpVisible
 }
