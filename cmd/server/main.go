@@ -1,4 +1,39 @@
 package main
 
+import (
+	"flag"
+	"os"
+	"os/signal"
+	"syscall"
+
+	"github.com/charmbracelet/log"
+	sshsrv "github.com/lbAntoine/ssh-portfolio/internal/ssh"
+)
+
 func main() {
+	port := flag.String("port", "2222", "SSH server port")
+	hostKey := flag.String("host-key", "./data/host_key", "path to host key")
+	flag.Parse()
+
+	addr := ":" + *port
+
+	srv := sshsrv.NewServer(addr, *hostKey)
+	if srv == nil {
+		log.Error("failed to create server")
+		os.Exit(1)
+	}
+
+	done := make(chan os.Signal, 1)
+	signal.Notify(done, syscall.SIGINT, syscall.SIGTERM)
+
+	log.Info("starting ssh-portfolio", "addr", addr)
+	go func() {
+		if err := srv.ListenAndServe(); err != nil {
+			log.Error("server error", "err", err)
+			done <- syscall.SIGTERM
+		}
+	}()
+
+	<-done
+	log.Info("shutting down")
 }
