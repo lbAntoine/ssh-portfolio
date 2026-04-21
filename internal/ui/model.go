@@ -7,14 +7,17 @@ import (
 // Model is the root Bubble Tea model
 type Model struct{}
 
+// NewModel returns an initialized root Model
 func NewModel() Model {
 	return Model{}
 }
 
+// Init implements tea.Model
 func (m Model) Init() tea.Cmd {
 	return nil
 }
 
+// Update implements tea.Model
 func (m Model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 	switch msg := msg.(type) {
 	case tea.KeyMsg:
@@ -27,6 +30,7 @@ func (m Model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 	return m, nil
 }
 
+// View implements tea.Model
 func (m Model) View() string {
 	return "hello -- ssh-portfolio\n\npress q to quit"
 }

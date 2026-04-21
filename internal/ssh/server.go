@@ -11,6 +11,8 @@ import (
 	"github.com/lbAntoine/ssh-portfolio/internal/ui"
 )
 
+// NewServer creates and configure a Wish SSH server on the given address
+// using the provided host key path
 func NewServer(addr, hostKeyPath string) *cssh.Server {
 	s, err := wish.NewServer(
 		wish.WithAddress(addr),
