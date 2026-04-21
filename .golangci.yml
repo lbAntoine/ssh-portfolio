@@ -6,8 +6,6 @@ linters:
     - govet
     - staticcheck
     - revive
-    - goimports
-    - godot
     - misspell
     - unconvert
     - unparam
@@ -21,3 +19,8 @@ linters:
       - path: _test\.go
         linters:
           - errcheck
+
+formatters:
+  enable:
+    - goimports
+    - gofmt
