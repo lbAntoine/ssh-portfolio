@@ -62,11 +62,13 @@ func (m Model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 			msg.Type == tea.KeyRunes && string(msg.Runes) == "q":
 			return m, tea.Quit
 
-		case msg.Type == tea.KeyTab:
+		case msg.Type == tea.KeyTab,
+			msg.Type == tea.KeyRunes && string(msg.Runes) == "l":
 			m.active = (m.active + 1) % len(m.sections)
 			return m, nil
 
-		case msg.Type == tea.KeyShiftTab:
+		case msg.Type == tea.KeyShiftTab,
+			msg.Type == tea.KeyRunes && string(msg.Runes) == "h":
 			m.active = (m.active - 1 + len(m.sections)) % len(m.sections)
 			return m, nil
 
@@ -111,7 +113,8 @@ func (m Model) tabBar() string {
 func (m Model) helpView() string {
 	help := lipgloss.NewStyle().Padding(1, 2).Render(
 		m.theme.Title.Render("keybindings") + "\n\n" +
-			m.theme.Body.Render("tab / shift+tab") + "  " + m.theme.Muted.Render("next / prev section") + "\n" +
+			m.theme.Body.Render("tab / l        ") + "  " + m.theme.Muted.Render("next section") + "\n" +
+			m.theme.Body.Render("shift+tab / h  ") + "  " + m.theme.Muted.Render("prev section") + "\n" +
 			m.theme.Body.Render("1–7            ") + "  " + m.theme.Muted.Render("jump to section") + "\n" +
 			m.theme.Body.Render("?              ") + "  " + m.theme.Muted.Render("toggle help") + "\n" +
 			m.theme.Body.Render("q / ctrl+c     ") + "  " + m.theme.Muted.Render("quit"),

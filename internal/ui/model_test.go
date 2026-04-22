@@ -56,6 +56,23 @@ func TestRoot_ShiftTabGoesBack(t *testing.T) {
 	}
 }
 
+func TestRoot_VimNextSection(t *testing.T) {
+	m := ui.NewModel(styles.Minimal(), 42)
+	next, _ := m.Update(tea.KeyMsg{Type: tea.KeyRunes, Runes: []rune("l")})
+	if next.(ui.Model).ActiveSection() != 1 {
+		t.Errorf("expected section 1 after vim 'l' move, got %d", next.(ui.Model).ActiveSection())
+	}
+}
+
+func TestRoot_VimPrevSection(t *testing.T) {
+	m := ui.NewModel(styles.Minimal(), 42)
+	next, _ := m.Update(tea.KeyMsg{Type: tea.KeyRunes, Runes: []rune("l")})
+	next, _ = next.(ui.Model).Update(tea.KeyMsg{Type: tea.KeyRunes, Runes: []rune("h")})
+	if next.(ui.Model).ActiveSection() != 0 {
+		t.Errorf("expected section 0 after vim 'h' move, got %d", next.(ui.Model).ActiveSection())
+	}
+}
+
 func TestRoot_NumberKeyJumpsDirect(t *testing.T) {
 	m := ui.NewModel(styles.Minimal(), 42)
 	next, _ := m.Update(tea.KeyMsg{Type: tea.KeyRunes, Runes: []rune("3")})
