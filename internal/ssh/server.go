@@ -1,6 +1,8 @@
 package ssh
 
 import (
+	"time"
+
 	tea "github.com/charmbracelet/bubbletea"
 	"github.com/charmbracelet/log"
 	cssh "github.com/charmbracelet/ssh"
@@ -26,13 +28,14 @@ func NewServer(addr, hostKeyPath string, theme styles.Theme, c *counter.Counter)
 					log.Warn("could not increment counter", "err", err)
 					n = 0
 				}
-				return ui.NewApp(theme, n), nil
+				return ui.NewApp(theme, n), []tea.ProgramOption{tea.WithAltScreen()}
 			}),
 			lm.Middleware(),
 		),
 		wish.WithPublicKeyAuth(func(_ cssh.Context, _ cssh.PublicKey) bool {
 			return true
 		}),
+		wish.WithIdleTimeout(5*time.Minute),
 	)
 	if err != nil {
 		log.Error("could not create server", "err", err)

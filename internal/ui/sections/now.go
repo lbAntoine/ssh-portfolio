@@ -48,5 +48,5 @@ func (n Now) View() string {
 		b.WriteString(t.Accent.Render(item.icon) + t.Body.Render(item.text) + "\n")
 	}
 
-	return t.Container.Render(b.String())
+	return t.Container.Width(n.width).Render(b.String())
 }

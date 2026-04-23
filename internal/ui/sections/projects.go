@@ -100,5 +100,5 @@ func (p Project) View() string {
 	}
 
 	b.WriteString(t.Muted.Render("j/k to navigate"))
-	return t.Container.Render(b.String())
+	return t.Container.Width(p.width).Render(b.String())
 }

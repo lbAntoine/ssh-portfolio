@@ -130,8 +130,9 @@ func (m Model) View() string {
 		content = m.sections[m.active].View()
 	}
 
-	box := lipgloss.NewStyle().Width(cw).Height(ch).Render(content)
-	block := lipgloss.NewStyle().Width(cw).Render(m.tabBar()) + "\n\n" + box
+	tabBar := lipgloss.NewStyle().Width(cw).Render(m.tabBar())
+	box := lipgloss.Place(cw, ch, lipgloss.Left, lipgloss.Center, content)
+	block := lipgloss.JoinVertical(lipgloss.Left, tabBar, "", box)
 
 	if m.width == 0 || m.height == 0 {
 		return block

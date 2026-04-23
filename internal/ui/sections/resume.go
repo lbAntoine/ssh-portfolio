@@ -41,5 +41,5 @@ func (r Resume) View() string {
 	b.WriteString(t.Accent.Render(resumeURL) + "\n\n")
 	b.WriteString(t.Muted.Render("tip: copy the URL above and paste it in your browser"))
 
-	return t.Container.Render(b.String())
+	return t.Container.Width(r.width).Render(b.String())
 }

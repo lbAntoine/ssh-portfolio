@@ -53,5 +53,5 @@ func (c Contact) View() string {
 		b.WriteString(t.Accent.Render(l.label) + "  " + t.Body.Render(l.value) + "\n")
 	}
 
-	return t.Container.Render(b.String())
+	return t.Container.Width(c.width).Render(b.String())
 }

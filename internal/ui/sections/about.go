@@ -30,7 +30,7 @@ func (a About) Update(_ tea.Msg) (tea.Model, tea.Cmd) { return a, nil }
 // View implements tea.Model
 func (a About) View() string {
 	t := a.theme
-	return t.Container.Render(
+	return t.Container.Width(a.width).Render(
 		t.Title.Render("about") + "\n\n" +
 			t.Body.Render("Backend developer finishing a software architecture master's degree (Oct. 2026).") + "\n" +
 			t.Body.Render("I build tools I want to use — for communities I'm part of.") + "\n\n" +

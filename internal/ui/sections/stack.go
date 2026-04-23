@@ -60,5 +60,5 @@ func (s Stack) View() string {
 		}
 	}
 
-	return t.Container.Render(b.String())
+	return t.Container.Width(s.width).Render(b.String())
 }

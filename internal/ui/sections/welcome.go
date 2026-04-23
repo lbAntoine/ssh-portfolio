@@ -55,5 +55,5 @@ func (w Welcome) View() string {
 		content = name + "\n" + subtitle + "\n\n" + tagline + "\n\n" + divider + "\n\n" + greeting + "  " + visitor
 	}
 
-	return t.Container.Render(content)
+	return t.Container.Width(w.width).Render(content)
 }
