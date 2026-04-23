@@ -16,7 +16,12 @@ func main() {
 	port := flag.String("port", "2222", "SSH server port")
 	hostKey := flag.String("host-key", "./data/host_key", "path to host key")
 	counterPath := flag.String("counter", "./data/counter.json", "path to visitor counter file")
+	logLevel := flag.String("log-level", "info", "log level (debug, info, warn, error)")
 	flag.Parse()
+
+	if lvl, err := log.ParseLevel(*logLevel); err == nil {
+		log.SetLevel(lvl)
+	}
 
 	addr := ":" + *port
 	c := counter.New(*counterPath)
@@ -30,7 +35,7 @@ func main() {
 	done := make(chan os.Signal, 1)
 	signal.Notify(done, syscall.SIGINT, syscall.SIGTERM)
 
-	log.Info("starting ssh-portfolio", "addr", addr)
+	log.Info("starting ssh-portfolio", "addr", addr, "host-key", *hostKey, "counter", *counterPath)
 	go func() {
 		if err := srv.ListenAndServe(); err != nil {
 			log.Error("server error", "err", err)
@@ -38,6 +43,6 @@ func main() {
 		}
 	}()
 
-	<-done
-	log.Info("shutting down")
+	sig := <-done
+	log.Info("shutting down", "signal", sig)
 }
