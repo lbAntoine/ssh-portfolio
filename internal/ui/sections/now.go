@@ -8,7 +8,17 @@ import (
 )
 
 // Now displays what Antoine is currently working on.
-type Now struct{ theme styles.Theme }
+type Now struct {
+	theme  styles.Theme
+	width  int
+	height int
+}
+
+// SetSize updates the dimensions of the section
+func (n *Now) SetSize(width, height int) {
+	n.width = width
+	n.height = height
+}
 
 // NewNow returns an initialized Now section.
 func NewNow(theme styles.Theme) Now { return Now{theme: theme} }

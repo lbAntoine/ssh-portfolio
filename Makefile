@@ -1,7 +1,7 @@
 BINARY=ssh-portfolio
 CMD=./cmd/server
 
-.PHONY: build test lint vet run clean keygen
+.PHONY: build test lint vet run clean keygen docker-build docker-up docker-down
 
 build:
 	go build -o $(BINARY) $(CMD)
@@ -34,3 +34,12 @@ cover:
 	go test -race -coverprofile=coverage.out ./...
 	go tool cover -html=coverage.out -o coverage.html
 	@echo "Coverage report at coverage.html"
+
+docker-build: keygen
+	docker build -t ssh-portfolio .
+
+docker-up: keygen
+	docker compose up -d
+
+docker-down:
+	docker compose down

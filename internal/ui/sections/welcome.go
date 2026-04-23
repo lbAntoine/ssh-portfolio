@@ -12,6 +12,14 @@ import (
 type Welcome struct {
 	theme        styles.Theme
 	visitorCount int
+	width        int
+	height       int
+}
+
+// SetSize updates the dimensions of the section
+func (w *Welcome) SetSize(width, height int) {
+	w.width = width
+	w.height = height
 }
 
 // NewWelcome returns an initialized Welcome section
@@ -35,16 +43,17 @@ func (w Welcome) View() string {
 
 	name := t.Title.Render("Antoine Le Bras")
 	subtitle := t.Subtitle.Render("Backend Developer · Aix-en-Provence, France")
-	tagline := t.Body.Render("I build things I would use myself.")
-	greeting := t.Muted.Render("안녕하세요")
-	divider := t.Muted.Render(t.Divider)
 	visitor := t.Muted.Render(fmt.Sprintf("you are visitor #%d", w.visitorCount))
 
-	return t.Container.Render(
-		name + "\n" +
-			subtitle + "\n\n" +
-			tagline + "\n\n" +
-			divider + "\n\n" +
-			greeting + "  " + visitor,
-	)
+	var content string
+	if styles.BreakpointFor(w.width) == styles.Compact {
+		content = name + "\n" + subtitle + "\n\n" + visitor
+	} else {
+		tagline := t.Body.Render("I build things I would use myself.")
+		greeting := t.Muted.Render("안녕하세요")
+		divider := t.Muted.Render(t.Divider)
+		content = name + "\n" + subtitle + "\n\n" + tagline + "\n\n" + divider + "\n\n" + greeting + "  " + visitor
+	}
+
+	return t.Container.Render(content)
 }

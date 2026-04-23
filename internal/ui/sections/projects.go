@@ -39,6 +39,14 @@ var projectList = []project{
 type Project struct {
 	theme    styles.Theme
 	selected int
+	width    int
+	height   int
+}
+
+// SetSize updates the dimensions of the section
+func (p *Project) SetSize(width, height int) {
+	p.width = width
+	p.height = height
 }
 
 // NewProject returns an initialized Project section

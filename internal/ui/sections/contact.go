@@ -14,7 +14,17 @@ type link struct {
 }
 
 // Contact displays contact links.
-type Contact struct{ theme styles.Theme }
+type Contact struct {
+	theme  styles.Theme
+	width  int
+	height int
+}
+
+// SetSize updates the dimensions of the section
+func (c *Contact) SetSize(width, height int) {
+	c.width = width
+	c.height = height
+}
 
 // NewContact returns an initialized Contact section.
 func NewContact(theme styles.Theme) Contact { return Contact{theme: theme} }

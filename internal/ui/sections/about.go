@@ -6,7 +6,17 @@ import (
 )
 
 // About displays the about me section
-type About struct{ theme styles.Theme }
+type About struct {
+	theme  styles.Theme
+	width  int
+	height int
+}
+
+// SetSize updates the dimensions of the section
+func (a *About) SetSize(width, height int) {
+	a.width = width
+	a.height = height
+}
 
 // NewAbout returns an initialized About section
 func NewAbout(theme styles.Theme) About { return About{theme: theme} }

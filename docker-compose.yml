@@ -1,0 +1,12 @@
+services:
+  ssh-portfolio:
+    build: .
+    ports:
+      - "2222:2222"
+    volumes:
+      - ./data:/data
+    command:
+      - -port=2222
+      - -host-key=/data/host_key
+      - -counter=/data/counter.json
+    restart: unless-stopped

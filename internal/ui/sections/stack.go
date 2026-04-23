@@ -19,7 +19,17 @@ var stackCategories = []category{
 }
 
 // Stack displays the tech stack section.
-type Stack struct{ theme styles.Theme }
+type Stack struct {
+	theme  styles.Theme
+	width  int
+	height int
+}
+
+// SetSize updates the dimensions of the section
+func (s *Stack) SetSize(width, height int) {
+	s.width = width
+	s.height = height
+}
 
 // NewStack returns an initialized Stack section.
 func NewStack(theme styles.Theme) Stack { return Stack{theme: theme} }
@@ -37,9 +47,17 @@ func (s Stack) View() string {
 
 	b.WriteString(t.Title.Render("stack") + "\n\n")
 
+	compact := styles.BreakpointFor(s.width) == styles.Compact
 	for _, cat := range stackCategories {
 		b.WriteString(t.Accent.Render(cat.label) + "\n")
-		b.WriteString(t.Muted.Render("  "+strings.Join(cat.items, " · ")) + "\n\n")
+		if compact {
+			for _, item := range cat.items {
+				b.WriteString(t.Muted.Render("  · "+item) + "\n")
+			}
+			b.WriteString("\n")
+		} else {
+			b.WriteString(t.Muted.Render("  "+strings.Join(cat.items, " · ")) + "\n\n")
+		}
 	}
 
 	return t.Container.Render(b.String())

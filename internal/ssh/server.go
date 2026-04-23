@@ -26,7 +26,7 @@ func NewServer(addr, hostKeyPath string, theme styles.Theme, c *counter.Counter)
 					log.Warn("could not increment counter", "err", err)
 					n = 0
 				}
-				return ui.NewModel(theme, n), nil
+				return ui.NewApp(theme, n), nil
 			}),
 			lm.Middleware(),
 		),

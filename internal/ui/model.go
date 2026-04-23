@@ -20,6 +20,8 @@ type Model struct {
 	sections    []tea.Model
 	active      int
 	helpVisible bool
+	width       int
+	height      int
 }
 
 // NewModel returns an initialized root Model
@@ -56,6 +58,15 @@ func (m Model) Init() tea.Cmd {
 // Update implements tea.Model
 func (m Model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 	switch msg := msg.(type) {
+	case tea.WindowSizeMsg:
+		m.width = msg.Width
+		m.height = msg.Height
+		for i, s := range m.sections {
+			if sz, ok := s.(interface{ SetSize(int, int) }); ok {
+				sz.SetSize(msg.Width, msg.Height)
+				m.sections[i] = s
+			}
+		}
 	case tea.KeyMsg:
 		switch {
 		case msg.Type == tea.KeyCtrlC,
@@ -99,6 +110,11 @@ func (m Model) View() string {
 }
 
 func (m Model) tabBar() string {
+	if styles.BreakpointFor(m.width) == styles.Compact {
+		return m.theme.Muted.Render(
+			fmt.Sprintf("[%d/7] %s", m.active+1, sectionNames[m.active]),
+		)
+	}
 	var tabs []string
 	for i, name := range sectionNames {
 		if i == m.active {

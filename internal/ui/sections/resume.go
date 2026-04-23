@@ -10,7 +10,17 @@ import (
 const resumeURL = "https://github.com/lbAntoine/ssh-portfolio/releases/latest/download/resume.pdf"
 
 // Resume displays the resume download section.
-type Resume struct{ theme styles.Theme }
+type Resume struct {
+	theme  styles.Theme
+	width  int
+	height int
+}
+
+// SetSize updates the dimensions of the section
+func (r *Resume) SetSize(width, height int) {
+	r.width = width
+	r.height = height
+}
 
 // NewResume returns an initialized Resume section.
 func NewResume(theme styles.Theme) Resume { return Resume{theme: theme} }

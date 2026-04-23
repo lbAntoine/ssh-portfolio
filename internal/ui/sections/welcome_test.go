@@ -17,8 +17,17 @@ func TestWelcome_RendersName(t *testing.T) {
 
 func TestWelcome_RendersKoreanGreeting(t *testing.T) {
 	w := sections.NewWelcome(styles.Minimal(), 42)
+	w.SetSize(100, 40)
 	if !strings.Contains(w.View(), "안녕하세요") {
 		t.Error("expected Korean greeting in welcome view")
+	}
+}
+
+func TestWelcome_CompactHidesGreeting(t *testing.T) {
+	w := sections.NewWelcome(styles.Minimal(), 42)
+	w.SetSize(50, 20)
+	if strings.Contains(w.View(), "안녕하세요") {
+		t.Error("compact mode should hide Korean greeting")
 	}
 }
 
