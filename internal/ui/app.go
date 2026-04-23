@@ -29,6 +29,14 @@ func (a App) Init() tea.Cmd { return a.splash.Init() }
 
 // Update implements tea.Model
 func (a App) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
+	if wm, ok := msg.(tea.WindowSizeMsg); ok {
+		splashNext, _ := a.splash.Update(wm)
+		a.splash = splashNext.(splash.Model)
+		mainNext, _ := a.main.Update(wm)
+		a.main = mainNext.(Model)
+		return a, nil
+	}
+
 	if a.ready {
 		next, cmd := a.main.Update(msg)
 		a.main = next.(Model)

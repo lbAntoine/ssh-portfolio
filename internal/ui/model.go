@@ -10,6 +10,11 @@ import (
 	"github.com/lbAntoine/ssh-portfolio/internal/ui/styles"
 )
 
+const (
+	maxContentWidth  = 96
+	maxContentHeight = 36
+)
+
 var sectionNames = []string{
 	"welcome", "about", "projects", "stack", "now", "contact", "resume",
 }
@@ -40,6 +45,18 @@ func NewModel(theme styles.Theme, visitorCount int) Model {
 	}
 }
 
+func (m Model) contentSize() (w, h int) {
+	w = m.width - 4
+	if w > maxContentWidth {
+		w = maxContentWidth
+	}
+	h = m.height - 4
+	if h > maxContentHeight {
+		h = maxContentHeight
+	}
+	return
+}
+
 // ActiveSection returns the index of the currently active section
 func (m Model) ActiveSection() int {
 	return m.active
@@ -61,9 +78,10 @@ func (m Model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 	case tea.WindowSizeMsg:
 		m.width = msg.Width
 		m.height = msg.Height
+		cw, ch := m.contentSize()
 		for i, s := range m.sections {
 			if sz, ok := s.(interface{ SetSize(int, int) }); ok {
-				sz.SetSize(msg.Width, msg.Height)
+				sz.SetSize(cw, ch)
 				m.sections[i] = s
 			}
 		}
@@ -103,10 +121,22 @@ func (m Model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 
 // View implements tea.Model
 func (m Model) View() string {
+	cw, ch := m.contentSize()
+
+	var content string
 	if m.helpVisible {
-		return m.helpView()
+		content = m.helpView()
+	} else {
+		content = m.sections[m.active].View()
 	}
-	return m.tabBar() + "\n\n" + m.sections[m.active].View()
+
+	box := lipgloss.NewStyle().Width(cw).Height(ch).Render(content)
+	block := lipgloss.NewStyle().Width(cw).Render(m.tabBar()) + "\n\n" + box
+
+	if m.width == 0 || m.height == 0 {
+		return block
+	}
+	return lipgloss.Place(m.width, m.height, lipgloss.Center, lipgloss.Center, block)
 }
 
 func (m Model) tabBar() string {

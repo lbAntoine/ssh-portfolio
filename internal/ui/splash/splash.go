@@ -4,6 +4,7 @@ import (
 	"time"
 
 	tea "github.com/charmbracelet/bubbletea"
+	"github.com/charmbracelet/lipgloss"
 	"github.com/lbAntoine/ssh-portfolio/internal/ui/styles"
 )
 
@@ -19,12 +20,15 @@ type TickMsg struct{}
 
 // Model is the typewriter splash screen
 type Model struct {
-	text     string
-	theme    styles.Theme
-	revealed int
-	cursor   bool
-	held     int
-	done     bool
+	text       string
+	theme      styles.Theme
+	revealed   int
+	cursor     bool
+	held       int
+	blinkCount int
+	done       bool
+	width      int
+	height     int
 }
 
 // NewSplash returns an initialized splash model
@@ -44,15 +48,21 @@ func (m Model) Init() tea.Cmd { return tick() }
 
 // Update implements tea.Model
 func (m Model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
-	switch msg.(type) {
+	switch msg := msg.(type) {
+	case tea.WindowSizeMsg:
+		m.width = msg.Width
+		m.height = msg.Height
 	case TickMsg:
 		if m.revealed < len(m.text) {
 			m.revealed++
 			m.cursor = true
 			return m, tick()
 		}
-		m.cursor = !m.cursor
 		m.held++
+		m.blinkCount++
+		if m.blinkCount%4 == 0 {
+			m.cursor = !m.cursor
+		}
 		if m.held >= holdTicks {
 			m.done = true
 			return m, nil
@@ -68,12 +78,15 @@ func (m Model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 // View implements tea.Model
 func (m Model) View() string {
 	text := m.theme.Accent.Render(m.text[:m.revealed])
-	if m.done {
+	if !m.done {
+		cursor := ""
+		if m.cursor {
+			cursor = m.theme.Muted.Render("▋")
+		}
+		text = text + cursor
+	}
+	if m.width == 0 || m.height == 0 {
 		return text
 	}
-	cursor := ""
-	if m.cursor {
-		cursor = m.theme.Muted.Render("▋")
-	}
-	return text + cursor
+	return lipgloss.Place(m.width, m.height, lipgloss.Center, lipgloss.Center, text)
 }
