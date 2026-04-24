@@ -11,7 +11,7 @@ import (
 
 func TestRootModel_InitialView(t *testing.T) {
 	m := ui.NewModel(styles.Minimal(), 42)
-	view := m.View()
+	view := m.View().Content
 	if view == "" {
 		t.Error("expected non-empty view on init")
 	}

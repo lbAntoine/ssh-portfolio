@@ -11,7 +11,7 @@ import (
 
 func TestSplash_StartsEmpty(t *testing.T) {
 	s := splash.NewSplash("hello", styles.Minimal())
-	if !strings.Contains(s.View(), "") {
+	if !strings.Contains(s.View().Content, "") {
 		t.Error("expected empty view on start")
 	}
 	if s.Done() {
@@ -23,8 +23,8 @@ func TestSplash_TickRevealsOneChar(t *testing.T) {
 	s := splash.NewSplash("hello", styles.Minimal())
 	next, _ := s.Update(splash.TickMsg{})
 	m := next.(splash.Model)
-	if !strings.Contains(m.View(), "h") {
-		t.Errorf("expected 'h', got %q", m.View())
+	if !strings.Contains(m.View().Content, "h") {
+		t.Errorf("expected 'h', got %q", m.View().Content)
 	}
 }
 
@@ -34,8 +34,8 @@ func TestSplash_ViewShowsRevealedText(t *testing.T) {
 	for range 3 {
 		m, _ = m.Update(splash.TickMsg{})
 	}
-	if !strings.Contains(m.View(), "hel") {
-		t.Errorf("expected 'hel', got %q", m.(splash.Model).View())
+	if !strings.Contains(m.View().Content, "hel") {
+		t.Errorf("expected 'hel', got %q", m.(splash.Model).View().Content)
 	}
 }
 
@@ -43,8 +43,8 @@ func TestSplash_KeypressSkipsToEnd(t *testing.T) {
 	s := splash.NewSplash("hello", styles.Minimal())
 	next, _ := s.Update(tea.KeyPressMsg{Code: 'x', Text: "x"})
 	m := next.(splash.Model)
-	if !strings.Contains(m.View(), "hello") {
-		t.Errorf("expected 'hello' after keypress, got %q", m.View())
+	if !strings.Contains(m.View().Content, "hello") {
+		t.Errorf("expected 'hello' after keypress, got %q", m.View().Content)
 	}
 }
 
