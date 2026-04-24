@@ -5,6 +5,8 @@ import (
 	"strings"
 
 	tea "charm.land/bubbletea/v2"
+	"charm.land/bubbles/v2/help"
+	"charm.land/bubbles/v2/key"
 	"charm.land/lipgloss/v2"
 	"github.com/lbAntoine/ssh-portfolio/internal/ui/sections"
 	"github.com/lbAntoine/ssh-portfolio/internal/ui/styles"
@@ -19,11 +21,54 @@ var sectionNames = []string{
 	"welcome", "about", "projects", "stack", "now", "contact", "resume",
 }
 
+type keyMap struct {
+	Next    key.Binding
+	Prev    key.Binding
+	Jump    key.Binding
+	Help    key.Binding
+	Quit    key.Binding
+}
+
+func (k keyMap) ShortHelp() []key.Binding {
+	return []key.Binding{k.Next, k.Prev, k.Help, k.Quit}
+}
+
+func (k keyMap) FullHelp() [][]key.Binding {
+	return [][]key.Binding{
+		{k.Next, k.Prev},
+		{k.Jump, k.Help, k.Quit},
+	}
+}
+
+var keys = keyMap{
+	Next: key.NewBinding(
+		key.WithKeys("tab", "l"),
+		key.WithHelp("tab/l", "next section"),
+	),
+	Prev: key.NewBinding(
+		key.WithKeys("shift+tab", "h"),
+		key.WithHelp("shift+tab/h", "prev section"),
+	),
+	Jump: key.NewBinding(
+		key.WithKeys("1", "2", "3", "4", "5", "6", "7"),
+		key.WithHelp("1–7", "jump to section"),
+	),
+	Help: key.NewBinding(
+		key.WithKeys("?"),
+		key.WithHelp("?", "toggle help"),
+	),
+	Quit: key.NewBinding(
+		key.WithKeys("q", "ctrl+c"),
+		key.WithHelp("q", "quit"),
+	),
+}
+
 // Model is the root Bubble Tea model
 type Model struct {
 	theme       styles.Theme
 	sections    []tea.Model
 	active      int
+	help        help.Model
 	helpVisible bool
 	width       int
 	height      int
@@ -33,6 +78,7 @@ type Model struct {
 func NewModel(theme styles.Theme, visitorCount int) Model {
 	return Model{
 		theme: theme,
+		help:  help.New(),
 		sections: []tea.Model{
 			sections.NewWelcome(theme, visitorCount),
 			sections.NewAbout(theme),
@@ -78,6 +124,7 @@ func (m Model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 	case tea.WindowSizeMsg:
 		m.width = msg.Width
 		m.height = msg.Height
+		m.help.SetWidth(msg.Width)
 		cw, ch := m.contentSize()
 		for i, s := range m.sections {
 			if sz, ok := s.(interface{ SetSize(int, int) }); ok {
@@ -86,19 +133,19 @@ func (m Model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 			}
 		}
 	case tea.KeyPressMsg:
-		switch msg.String() {
-		case "ctrl+c", "q":
+		switch {
+		case key.Matches(msg, keys.Quit):
 			return m, tea.Quit
-		case "tab", "l":
+		case key.Matches(msg, keys.Next):
 			m.active = (m.active + 1) % len(m.sections)
 			return m, nil
-		case "shift+tab", "h":
+		case key.Matches(msg, keys.Prev):
 			m.active = (m.active - 1 + len(m.sections)) % len(m.sections)
 			return m, nil
-		case "?":
+		case key.Matches(msg, keys.Help):
 			m.helpVisible = !m.helpVisible
 			return m, nil
-		default:
+		case key.Matches(msg, keys.Jump):
 			if len(msg.Text) == 1 && msg.Text[0] >= '1' && msg.Text[0] <= '7' {
 				m.active = int(msg.Text[0] - '1')
 				return m, nil
@@ -117,7 +164,10 @@ func (m Model) View() tea.View {
 
 	var content string
 	if m.helpVisible {
-		content = m.helpView()
+		content = lipgloss.NewStyle().Padding(1, 2).Render(
+			m.theme.Title.Render("keybindings") + "\n\n" +
+				m.help.FullHelpView(keys.FullHelp()),
+		)
 	} else {
 		content = m.sections[m.active].View().Content
 	}
@@ -147,16 +197,4 @@ func (m Model) tabBar() string {
 		}
 	}
 	return strings.Join(tabs, m.theme.Muted.Render("·"))
-}
-
-func (m Model) helpView() string {
-	help := lipgloss.NewStyle().Padding(1, 2).Render(
-		m.theme.Title.Render("keybindings") + "\n\n" +
-			m.theme.Body.Render("tab / l        ") + "  " + m.theme.Muted.Render("next section") + "\n" +
-			m.theme.Body.Render("shift+tab / h  ") + "  " + m.theme.Muted.Render("prev section") + "\n" +
-			m.theme.Body.Render("1–7            ") + "  " + m.theme.Muted.Render("jump to section") + "\n" +
-			m.theme.Body.Render("?              ") + "  " + m.theme.Muted.Render("toggle help") + "\n" +
-			m.theme.Body.Render("q / ctrl+c     ") + "  " + m.theme.Muted.Render("quit"),
-	)
-	return help
 }
