@@ -58,9 +58,20 @@ func (p *Project) SetSize(width, height int) {
 	p.list.SetHeight(height)
 }
 
+func themedDelegate(t styles.Theme) list.DefaultDelegate {
+	d := list.NewDefaultDelegate()
+	d.Styles.NormalTitle = t.Body.Padding(0, 0, 0, 2)
+	d.Styles.NormalDesc = t.Muted.Padding(0, 0, 0, 2)
+	d.Styles.SelectedTitle = t.Accent.Bold(true).Padding(0, 0, 0, 2)
+	d.Styles.SelectedDesc = t.Body.Padding(0, 0, 0, 2)
+	d.Styles.DimmedTitle = t.Muted.Padding(0, 0, 0, 1)
+	d.Styles.DimmedDesc = t.Muted.Padding(0, 0, 0, 1)
+	return d
+}
+
 // NewProject returns an initialized Project section
 func NewProject(theme styles.Theme) Project {
-	l := list.New(projectItems, list.NewDefaultDelegate(), 80, 20)
+	l := list.New(projectItems, themedDelegate(theme), 80, 20)
 	l.SetShowTitle(false)
 	l.SetShowStatusBar(false)
 	l.SetShowPagination(false)

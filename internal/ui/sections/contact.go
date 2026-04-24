@@ -46,11 +46,11 @@ func (c Contact) View() tea.View {
 		{"github  ", "github.com/lbAntoine"},
 		{"linkedin", "linkedin.com/in/antoine-le-bras"},
 		{"email   ", "antoine.lebras+sshportfolio@gmail.com"},
-		{"here    ", "ssh antoinelb.fr -p 2222"},
+		{"ssh     ", "ssh antoinelb.fr -p 2222"},
 	}
 
 	for _, l := range links {
-		b.WriteString(t.Accent.Render(l.label) + "  " + t.Body.Render(l.value) + "\n")
+		b.WriteString(t.Accent.Render(l.label) + "  " + t.Muted.Render(l.value) + "\n")
 	}
 
 	return tea.NewView(t.Container.Width(c.width).Render(b.String()))

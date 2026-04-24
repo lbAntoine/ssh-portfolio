@@ -16,6 +16,7 @@ var stackCategories = []category{
 	{label: "languages", items: []string{"Go", "Typescript", "Java", "Elixir (learning)"}},
 	{label: "infra", items: []string{"Docker", "PostgreSQL", "MongoDB", "Coolify", "Linux"}},
 	{label: "frontend", items: []string{"React", "TailwindCSS", "Vite"}},
+	{label: "tools", items: []string{"Neovim", "tmux", "Make", "Git", "Bruno", "zsh"}},
 }
 
 // Stack displays the tech stack section.

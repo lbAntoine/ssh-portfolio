@@ -58,5 +58,9 @@ func (a About) View() tea.View {
 	if a.width == 0 {
 		return tea.NewView(a.renderContent())
 	}
-	return tea.NewView(a.vp.View())
+	content := a.vp.View()
+	if !a.vp.AtBottom() {
+		content += "\n" + a.theme.Muted.Render("  ↓ scroll")
+	}
+	return tea.NewView(content)
 }

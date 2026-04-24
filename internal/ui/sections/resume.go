@@ -31,7 +31,10 @@ func (r Resume) renderContent() string {
 	t := r.theme
 	var b strings.Builder
 	b.WriteString(t.Title.Render("resume") + "\n\n")
-	b.WriteString(t.Body.Render("Download my resume at:") + "\n\n")
+	b.WriteString(t.Body.Render("5+ years building backend systems in Go, TypeScript and Java.") + "\n")
+	b.WriteString(t.Body.Render("Software architecture master's degree (Oct. 2026).") + "\n\n")
+	b.WriteString(t.Muted.Render(t.Divider) + "\n\n")
+	b.WriteString(t.Muted.Render("Download at:") + "\n\n")
 	b.WriteString(t.Accent.Render(resumeURL) + "\n\n")
 	b.WriteString(t.Muted.Render("tip: copy the URL above and paste it in your browser"))
 	return t.Container.Width(r.width).Render(b.String())
