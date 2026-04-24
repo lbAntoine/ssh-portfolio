@@ -120,14 +120,14 @@ func (m Model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 }
 
 // View implements tea.Model
-func (m Model) View() string {
+func (m Model) View() tea.View {
 	cw, ch := m.contentSize()
 
 	var content string
 	if m.helpVisible {
 		content = m.helpView()
 	} else {
-		content = m.sections[m.active].View()
+		content = m.sections[m.active].View().Content
 	}
 
 	tabBar := lipgloss.NewStyle().Width(cw).Render(m.tabBar())
@@ -135,9 +135,9 @@ func (m Model) View() string {
 	block := lipgloss.JoinVertical(lipgloss.Left, tabBar, "", box)
 
 	if m.width == 0 || m.height == 0 {
-		return block
+		return tea.NewView(block)
 	}
-	return lipgloss.Place(m.width, m.height, lipgloss.Center, lipgloss.Center, block)
+	return tea.NewView(lipgloss.Place(m.width, m.height, lipgloss.Center, lipgloss.Center, block))
 }
 
 func (m Model) tabBar() string {

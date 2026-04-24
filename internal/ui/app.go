@@ -52,7 +52,7 @@ func (a App) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 }
 
 // View implements tea.Model
-func (a App) View() string {
+func (a App) View() tea.View {
 	if a.ready {
 		return a.main.View()
 	}

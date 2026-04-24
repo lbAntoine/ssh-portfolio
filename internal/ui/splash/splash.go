@@ -76,7 +76,7 @@ func (m Model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 }
 
 // View implements tea.Model
-func (m Model) View() string {
+func (m Model) View() tea.View {
 	text := m.theme.Accent.Render(m.text[:m.revealed])
 	if !m.done {
 		cursor := ""
@@ -86,7 +86,7 @@ func (m Model) View() string {
 		text = text + cursor
 	}
 	if m.width == 0 || m.height == 0 {
-		return text
+		return tea.NewView(text)
 	}
-	return lipgloss.Place(m.width, m.height, lipgloss.Center, lipgloss.Center, text)
+	return tea.NewView(lipgloss.Place(m.width, m.height, lipgloss.Center, lipgloss.Center, text))
 }
