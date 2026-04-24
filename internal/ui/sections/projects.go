@@ -1,33 +1,40 @@
 package sections
 
 import (
-	"strings"
-
 	tea "charm.land/bubbletea/v2"
+	"charm.land/bubbles/v2/list"
 	"github.com/lbAntoine/ssh-portfolio/internal/ui/styles"
 )
 
-type project struct {
+type projectItem struct {
 	name   string
 	status string
 	desc   string
 	url    string
 }
 
-var projectList = []project{
-	{
+func (p projectItem) Title() string       { return p.name + "  · " + p.status }
+func (p projectItem) Description() string {
+	if p.url != "" {
+		return p.desc + "\n" + p.url
+	}
+	return p.desc
+}
+func (p projectItem) FilterValue() string { return p.name }
+
+var projectItems = []list.Item{
+	projectItem{
 		name:   "Compendium",
 		status: "live",
 		desc:   "Card lending & collection platform for the Flesh and Blood TCG community",
 		url:    "compendium.vaultofsuraya.com",
 	},
-	{
+	projectItem{
 		name:   "TCG Tournament Platform",
 		status: "in development",
-		desc:   "Tournament management, meta reporting and branded inforgraphic generation for TCG stores and TOs",
-		url:    "",
+		desc:   "Tournament management, meta reporting and branded infographic generation for TCG stores and TOs",
 	},
-	{
+	projectItem{
 		name:   "ssh portfolio",
 		status: "you are here",
 		desc:   "Interactive terminal portfolio served over SSH. Built with Go + Charmbracelet",
@@ -35,70 +42,46 @@ var projectList = []project{
 	},
 }
 
-// Project displays the about me section
+// Project displays the projects section
 type Project struct {
-	theme    styles.Theme
-	selected int
-	width    int
-	height   int
+	theme  styles.Theme
+	list   list.Model
+	width  int
+	height int
 }
 
 // SetSize updates the dimensions of the section
 func (p *Project) SetSize(width, height int) {
 	p.width = width
 	p.height = height
+	p.list.SetWidth(width)
+	p.list.SetHeight(height)
 }
 
 // NewProject returns an initialized Project section
-func NewProject(theme styles.Theme) Project { return Project{theme: theme} }
+func NewProject(theme styles.Theme) Project {
+	l := list.New(projectItems, list.NewDefaultDelegate(), 80, 20)
+	l.SetShowTitle(false)
+	l.SetShowStatusBar(false)
+	l.SetShowPagination(false)
+	l.SetShowHelp(false)
+	l.SetFilteringEnabled(false)
+	return Project{theme: theme, list: l}
+}
 
 // Init implements tea.Model
 func (p Project) Init() tea.Cmd { return nil }
 
 // Update implements tea.Model
 func (p Project) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
-	switch msg := msg.(type) {
-	case tea.KeyPressMsg:
-		switch msg.String() {
-		case "j":
-			if p.selected < len(projectList)-1 {
-				p.selected++
-			}
-		case "k":
-			if p.selected > 0 {
-				p.selected--
-			}
-		}
-	}
-	return p, nil
+	var cmd tea.Cmd
+	p.list, cmd = p.list.Update(msg)
+	return p, cmd
 }
 
 // View implements tea.Model
 func (p Project) View() tea.View {
 	t := p.theme
-	var b strings.Builder
-
-	b.WriteString(t.Title.Render("projects") + "\n\n")
-
-	for i, proj := range projectList {
-		cursor := "  "
-		name := t.Body.Render(proj.name)
-		status := t.Muted.Render("· " + proj.status)
-
-		if i == p.selected {
-			cursor = t.Accent.Render("▶ ")
-			name = t.Accent.Render(proj.name)
-			b.WriteString(cursor + name + " " + status + "\n")
-			b.WriteString("    " + t.Body.Render(proj.desc) + "\n")
-			if proj.url != "" {
-				b.WriteString("    " + t.Muted.Render(proj.url) + "\n")
-			}
-			b.WriteString("\n")
-		} else {
-			b.WriteString(cursor + name + " " + status + "\n\n")
-		}
-	}
-
-	b.WriteString(t.Muted.Render("j/k to navigate"))
-	return tea.NewView(t.Container.Width(p.width).Render(b.String()))
+	header := t.Container.Width(p.width).Render(t.Title.Render("projects"))
+	return tea.NewView(header + "\n" + p.list.View())
 }
