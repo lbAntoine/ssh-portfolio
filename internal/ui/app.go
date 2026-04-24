@@ -16,7 +16,7 @@ type App struct {
 // NewApp returns an initialized App starting in splash state
 func NewApp(theme styles.Theme, visitorCount int) App {
 	return App{
-		splash: splash.NewSplash(splash.SplashText, theme),
+		splash: splash.NewSplash(splash.SplashText, splash.SplashSubtitle, theme),
 		main:   NewModel(theme, visitorCount),
 	}
 }

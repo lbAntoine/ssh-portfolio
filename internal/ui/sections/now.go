@@ -7,6 +7,34 @@ import (
 	"github.com/lbAntoine/ssh-portfolio/internal/ui/styles"
 )
 
+type nowGroup struct {
+	label string
+	items []string
+}
+
+var nowGroups = []nowGroup{
+	{
+		label: "work",
+		items: []string{
+			"Developer & test analyst at Nexpublica",
+			"Finishing software architecture master's degree (Oct. 2026)",
+		},
+	},
+	{
+		label: "building",
+		items: []string{
+			"Maintaining and improving Compendium",
+			"Validating TCG tournament platform with stores and TOs",
+		},
+	},
+	{
+		label: "learning",
+		items: []string{
+			"Korean — 안녕하세요",
+		},
+	},
+}
+
 // Now displays what Antoine is currently working on.
 type Now struct {
 	theme  styles.Theme
@@ -36,17 +64,15 @@ func (n Now) View() tea.View {
 
 	b.WriteString(t.Title.Render("now") + "\n\n")
 
-	items := []struct{ icon, text string }{
-		{"⚙  ", "Developer & test analyst at Nexpublica"},
-		{"🌱 ", "Maintaining and improving Compendium"},
-		{"🃏 ", "Validating TCG tournament platform with stores and TOs"},
-		{"📖 ", "Finishing software architecture master's degree (Oct. 2026)"},
-		{"🇰🇷 ", "Learning Korean — 안녕하세요"},
+	for _, group := range nowGroups {
+		b.WriteString(t.Accent.Render(group.label) + "\n")
+		for _, item := range group.items {
+			b.WriteString(t.Body.Render("  "+item) + "\n")
+		}
+		b.WriteString("\n")
 	}
 
-	for _, item := range items {
-		b.WriteString(t.Accent.Render(item.icon) + t.Body.Render(item.text) + "\n")
-	}
+	b.WriteString(t.Muted.Render("updated april 2026"))
 
 	return tea.NewView(t.Container.Width(n.width).Render(b.String()))
 }

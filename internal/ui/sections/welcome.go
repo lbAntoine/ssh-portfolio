@@ -4,7 +4,6 @@ import (
 	"fmt"
 
 	tea "charm.land/bubbletea/v2"
-
 	"github.com/lbAntoine/ssh-portfolio/internal/ui/styles"
 )
 
@@ -28,14 +27,10 @@ func NewWelcome(theme styles.Theme, visitorCount int) Welcome {
 }
 
 // Init implements tea.Model
-func (w Welcome) Init() tea.Cmd {
-	return nil
-}
+func (w Welcome) Init() tea.Cmd { return nil }
 
 // Update implements tea.Model
-func (w Welcome) Update(_ tea.Msg) (tea.Model, tea.Cmd) {
-	return w, nil
-}
+func (w Welcome) Update(_ tea.Msg) (tea.Model, tea.Cmd) { return w, nil }
 
 // View implements tea.Model
 func (w Welcome) View() tea.View {
@@ -43,7 +38,7 @@ func (w Welcome) View() tea.View {
 
 	name := t.Title.Render("Antoine Le Bras")
 	subtitle := t.Subtitle.Render("Backend Developer · Aix-en-Provence, France")
-	visitor := t.Muted.Render(fmt.Sprintf("you are visitor #%d", w.visitorCount))
+	visitor := t.Muted.Render(fmt.Sprintf("visitor #%d", w.visitorCount))
 
 	var content string
 	if styles.BreakpointFor(w.width) == styles.Compact {
@@ -52,7 +47,7 @@ func (w Welcome) View() tea.View {
 		tagline := t.Body.Render("I build things I would use myself.")
 		greeting := t.Muted.Render("안녕하세요")
 		divider := t.Muted.Render(t.Divider)
-		content = name + "\n" + subtitle + "\n\n" + tagline + "\n\n" + divider + "\n\n" + greeting + "  " + visitor
+		content = name + "\n" + subtitle + "\n\n" + tagline + "\n\n" + divider + "\n\n" + greeting + "\n\n" + visitor
 	}
 
 	return tea.NewView(t.Container.Width(w.width).Render(content))
