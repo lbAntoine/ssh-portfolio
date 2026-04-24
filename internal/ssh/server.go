@@ -24,14 +24,13 @@ func NewServer(addr, hostKeyPath string, c *counter.Counter) *cssh.Server {
 		wish.WithHostKeyPath(hostKeyPath),
 		wish.WithMiddleware(
 			bm.Middleware(func(s cssh.Session) (tea.Model, []tea.ProgramOption) {
-				renderer := bm.MakeRenderer(s)
-				theme := styles.MinimalWith(renderer)
+				theme := styles.Minimal()
 				n, err := c.Increment()
 				if err != nil {
 					log.Warn("could not increment counter", "err", err)
 					n = 0
 				}
-				return ui.NewApp(theme, n), []tea.ProgramOption{tea.WithAltScreen()}
+				return ui.NewApp(theme, n), nil
 			}),
 			at.Middleware(),
 			lm.Middleware(),

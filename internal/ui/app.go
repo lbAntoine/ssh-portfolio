@@ -53,8 +53,12 @@ func (a App) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 
 // View implements tea.Model
 func (a App) View() tea.View {
+	var v tea.View
 	if a.ready {
-		return a.main.View()
+		v = a.main.View()
+	} else {
+		v = a.splash.View()
 	}
-	return a.splash.View()
+	v.AltScreen = true
+	return v
 }
