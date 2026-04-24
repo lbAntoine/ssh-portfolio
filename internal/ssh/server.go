@@ -3,12 +3,13 @@ package ssh
 import (
 	"time"
 
-	tea "github.com/charmbracelet/bubbletea"
-	"github.com/charmbracelet/log"
+	tea "charm.land/bubbletea/v2"
+	"charm.land/log/v2"
 	cssh "github.com/charmbracelet/ssh"
-	"github.com/charmbracelet/wish"
-	bm "github.com/charmbracelet/wish/bubbletea"
-	lm "github.com/charmbracelet/wish/logging"
+	"charm.land/wish/v2"
+	at "charm.land/wish/v2/activeterm"
+	bm "charm.land/wish/v2/bubbletea"
+	lm "charm.land/wish/v2/logging"
 
 	"github.com/lbAntoine/ssh-portfolio/internal/counter"
 	"github.com/lbAntoine/ssh-portfolio/internal/ui"
@@ -17,12 +18,14 @@ import (
 
 // NewServer creates and configure a Wish SSH server on the given address
 // using the provided host key path
-func NewServer(addr, hostKeyPath string, theme styles.Theme, c *counter.Counter) *cssh.Server {
+func NewServer(addr, hostKeyPath string, c *counter.Counter) *cssh.Server {
 	s, err := wish.NewServer(
 		wish.WithAddress(addr),
 		wish.WithHostKeyPath(hostKeyPath),
 		wish.WithMiddleware(
 			bm.Middleware(func(s cssh.Session) (tea.Model, []tea.ProgramOption) {
+				renderer := bm.MakeRenderer(s)
+				theme := styles.MinimalWith(renderer)
 				n, err := c.Increment()
 				if err != nil {
 					log.Warn("could not increment counter", "err", err)
@@ -30,12 +33,14 @@ func NewServer(addr, hostKeyPath string, theme styles.Theme, c *counter.Counter)
 				}
 				return ui.NewApp(theme, n), []tea.ProgramOption{tea.WithAltScreen()}
 			}),
+			at.Middleware(),
 			lm.Middleware(),
 		),
 		wish.WithPublicKeyAuth(func(_ cssh.Context, _ cssh.PublicKey) bool {
 			return true
 		}),
 		wish.WithIdleTimeout(5*time.Minute),
+		wish.WithMaxTimeout(30*time.Minute),
 	)
 	if err != nil {
 		log.Error("could not create server", "err", err)

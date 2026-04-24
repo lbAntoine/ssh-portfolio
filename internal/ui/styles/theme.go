@@ -1,6 +1,6 @@
 package styles
 
-import gloss "github.com/charmbracelet/lipgloss"
+import gloss "charm.land/lipgloss/v2"
 
 // Theme data type
 type Theme struct {

@@ -3,7 +3,7 @@ package ui_test
 import (
 	"testing"
 
-	tea "github.com/charmbracelet/bubbletea"
+	tea "charm.land/bubbletea/v2"
 
 	"github.com/lbAntoine/ssh-portfolio/internal/ui"
 	"github.com/lbAntoine/ssh-portfolio/internal/ui/styles"

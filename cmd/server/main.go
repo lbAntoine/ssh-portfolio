@@ -6,10 +6,9 @@ import (
 	"os/signal"
 	"syscall"
 
-	"github.com/charmbracelet/log"
+	"charm.land/log/v2"
 	"github.com/lbAntoine/ssh-portfolio/internal/counter"
 	sshsrv "github.com/lbAntoine/ssh-portfolio/internal/ssh"
-	"github.com/lbAntoine/ssh-portfolio/internal/ui/styles"
 )
 
 func main() {
@@ -26,7 +25,7 @@ func main() {
 	addr := ":" + *port
 	c := counter.New(*counterPath)
 
-	srv := sshsrv.NewServer(addr, *hostKey, styles.Minimal(), c)
+	srv := sshsrv.NewServer(addr, *hostKey, c)
 	if srv == nil {
 		log.Error("failed to create server")
 		os.Exit(1)
