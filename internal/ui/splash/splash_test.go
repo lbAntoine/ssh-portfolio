@@ -41,7 +41,7 @@ func TestSplash_ViewShowsRevealedText(t *testing.T) {
 
 func TestSplash_KeypressSkipsToEnd(t *testing.T) {
 	s := splash.NewSplash("hello", styles.Minimal())
-	next, _ := s.Update(tea.KeyMsg{Type: tea.KeyRunes, Runes: []rune("x")})
+	next, _ := s.Update(tea.KeyPressMsg{Code: 'x', Text: "x"})
 	m := next.(splash.Model)
 	if !strings.Contains(m.View(), "hello") {
 		t.Errorf("expected 'hello' after keypress, got %q", m.View())

@@ -30,9 +30,9 @@ func TestApp_TransitionsAfterSplashDone(t *testing.T) {
 
 func TestApp_KeypressSkipsSplash(t *testing.T) {
 	a := ui.NewApp(styles.Minimal(), 0)
-	m, _ := a.Update(tea.KeyMsg{Type: tea.KeyRunes, Runes: []rune("x")})
+	m, _ := a.Update(tea.KeyPressMsg{Code: 'x', Text: "x"})
 	// second keypress after skip should transition
-	m, _ = m.Update(tea.KeyMsg{Type: tea.KeyRunes, Runes: []rune("x")})
+	m, _ = m.Update(tea.KeyPressMsg{Code: 'x', Text: "x"})
 	if !m.(ui.App).Ready() {
 		t.Error("app should be ready after skipping splash")
 	}

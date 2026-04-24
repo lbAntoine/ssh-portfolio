@@ -85,30 +85,22 @@ func (m Model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 				m.sections[i] = s
 			}
 		}
-	case tea.KeyMsg:
-		switch {
-		case msg.Type == tea.KeyCtrlC,
-			msg.Type == tea.KeyRunes && string(msg.Runes) == "q":
+	case tea.KeyPressMsg:
+		switch msg.String() {
+		case "ctrl+c", "q":
 			return m, tea.Quit
-
-		case msg.Type == tea.KeyTab,
-			msg.Type == tea.KeyRunes && string(msg.Runes) == "l":
+		case "tab", "l":
 			m.active = (m.active + 1) % len(m.sections)
 			return m, nil
-
-		case msg.Type == tea.KeyShiftTab,
-			msg.Type == tea.KeyRunes && string(msg.Runes) == "h":
+		case "shift+tab", "h":
 			m.active = (m.active - 1 + len(m.sections)) % len(m.sections)
 			return m, nil
-
-		case msg.Type == tea.KeyRunes && string(msg.Runes) == "?":
+		case "?":
 			m.helpVisible = !m.helpVisible
 			return m, nil
-
-		case msg.Type == tea.KeyRunes:
-			r := string(msg.Runes)
-			if len(r) == 1 && r[0] >= '1' && r[0] <= '7' {
-				m.active = int(r[0] - '1')
+		default:
+			if len(msg.Text) == 1 && msg.Text[0] >= '1' && msg.Text[0] <= '7' {
+				m.active = int(msg.Text[0] - '1')
 				return m, nil
 			}
 		}

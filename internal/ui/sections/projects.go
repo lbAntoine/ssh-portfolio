@@ -58,8 +58,8 @@ func (p Project) Init() tea.Cmd { return nil }
 // Update implements tea.Model
 func (p Project) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 	switch msg := msg.(type) {
-	case tea.KeyMsg:
-		switch string(msg.Runes) {
+	case tea.KeyPressMsg:
+		switch msg.String() {
 		case "j":
 			if p.selected < len(projectList)-1 {
 				p.selected++

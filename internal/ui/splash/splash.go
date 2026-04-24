@@ -68,7 +68,7 @@ func (m Model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 			return m, nil
 		}
 		return m, tick()
-	case tea.KeyMsg:
+	case tea.KeyPressMsg:
 		m.revealed = len(m.text)
 		m.done = true
 	}
