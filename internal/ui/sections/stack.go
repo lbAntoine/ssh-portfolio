@@ -41,7 +41,7 @@ func (s Stack) Init() tea.Cmd { return nil }
 func (s Stack) Update(_ tea.Msg) (tea.Model, tea.Cmd) { return s, nil }
 
 // View implements tea.Model.
-func (s Stack) View() string {
+func (s Stack) View() tea.View {
 	t := s.theme
 	var b strings.Builder
 
@@ -60,5 +60,5 @@ func (s Stack) View() string {
 		}
 	}
 
-	return t.Container.Width(s.width).Render(b.String())
+	return tea.NewView(t.Container.Width(s.width).Render(b.String()))
 }

@@ -28,9 +28,9 @@ func (a About) Init() tea.Cmd { return nil }
 func (a About) Update(_ tea.Msg) (tea.Model, tea.Cmd) { return a, nil }
 
 // View implements tea.Model
-func (a About) View() string {
+func (a About) View() tea.View {
 	t := a.theme
-	return t.Container.Width(a.width).Render(
+	return tea.NewView(t.Container.Width(a.width).Render(
 		t.Title.Render("about") + "\n\n" +
 			t.Body.Render("Backend developer finishing a software architecture master's degree (Oct. 2026).") + "\n" +
 			t.Body.Render("I build tools I want to use — for communities I'm part of.") + "\n\n" +
@@ -39,5 +39,5 @@ func (a About) View() string {
 			t.Accent.Render("📍 ") + t.Body.Render("Aix-en-Provence, France") + "\n" +
 			t.Accent.Render("❤  ") + t.Body.Render("Open source, TCG scene, building things that solve real problems") + "\n" +
 			t.Accent.Render("⚡ ") + t.Body.Render("Card game enthusiast, keyboard hobbyist, gunpla builder"),
-	)
+	))
 }

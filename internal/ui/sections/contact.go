@@ -36,7 +36,7 @@ func (c Contact) Init() tea.Cmd { return nil }
 func (c Contact) Update(_ tea.Msg) (tea.Model, tea.Cmd) { return c, nil }
 
 // View implements tea.Model.
-func (c Contact) View() string {
+func (c Contact) View() tea.View {
 	t := c.theme
 	var b strings.Builder
 
@@ -53,5 +53,5 @@ func (c Contact) View() string {
 		b.WriteString(t.Accent.Render(l.label) + "  " + t.Body.Render(l.value) + "\n")
 	}
 
-	return t.Container.Width(c.width).Render(b.String())
+	return tea.NewView(t.Container.Width(c.width).Render(b.String()))
 }

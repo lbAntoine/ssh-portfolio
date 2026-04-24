@@ -30,7 +30,7 @@ func (n Now) Init() tea.Cmd { return nil }
 func (n Now) Update(_ tea.Msg) (tea.Model, tea.Cmd) { return n, nil }
 
 // View implements tea.Model.
-func (n Now) View() string {
+func (n Now) View() tea.View {
 	t := n.theme
 	var b strings.Builder
 
@@ -48,5 +48,5 @@ func (n Now) View() string {
 		b.WriteString(t.Accent.Render(item.icon) + t.Body.Render(item.text) + "\n")
 	}
 
-	return t.Container.Width(n.width).Render(b.String())
+	return tea.NewView(t.Container.Width(n.width).Render(b.String()))
 }

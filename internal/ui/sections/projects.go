@@ -74,7 +74,7 @@ func (p Project) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 }
 
 // View implements tea.Model
-func (p Project) View() string {
+func (p Project) View() tea.View {
 	t := p.theme
 	var b strings.Builder
 
@@ -100,5 +100,5 @@ func (p Project) View() string {
 	}
 
 	b.WriteString(t.Muted.Render("j/k to navigate"))
-	return t.Container.Width(p.width).Render(b.String())
+	return tea.NewView(t.Container.Width(p.width).Render(b.String()))
 }

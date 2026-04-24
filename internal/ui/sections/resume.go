@@ -32,7 +32,7 @@ func (r Resume) Init() tea.Cmd { return nil }
 func (r Resume) Update(_ tea.Msg) (tea.Model, tea.Cmd) { return r, nil }
 
 // View implements tea.Model.
-func (r Resume) View() string {
+func (r Resume) View() tea.View {
 	t := r.theme
 	var b strings.Builder
 
@@ -41,5 +41,5 @@ func (r Resume) View() string {
 	b.WriteString(t.Accent.Render(resumeURL) + "\n\n")
 	b.WriteString(t.Muted.Render("tip: copy the URL above and paste it in your browser"))
 
-	return t.Container.Width(r.width).Render(b.String())
+	return tea.NewView(t.Container.Width(r.width).Render(b.String()))
 }

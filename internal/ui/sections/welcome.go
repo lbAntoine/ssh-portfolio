@@ -38,7 +38,7 @@ func (w Welcome) Update(_ tea.Msg) (tea.Model, tea.Cmd) {
 }
 
 // View implements tea.Model
-func (w Welcome) View() string {
+func (w Welcome) View() tea.View {
 	t := w.theme
 
 	name := t.Title.Render("Antoine Le Bras")
@@ -55,5 +55,5 @@ func (w Welcome) View() string {
 		content = name + "\n" + subtitle + "\n\n" + tagline + "\n\n" + divider + "\n\n" + greeting + "  " + visitor
 	}
 
-	return t.Container.Width(w.width).Render(content)
+	return tea.NewView(t.Container.Width(w.width).Render(content))
 }
