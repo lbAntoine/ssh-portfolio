@@ -14,3 +14,11 @@ func TestServer_Configuration(t *testing.T) {
 		t.Fatal("expected a non-nil server")
 	}
 }
+
+func TestServer_InvalidKeyPath(t *testing.T) {
+	c := counter.New(t.TempDir() + "/counter.json")
+	srv := ssh.NewServer(":2222", "/nonexistent_dir/host_key", c)
+	if srv != nil {
+		t.Error("expected nil server when key path is invalid")
+	}
+}

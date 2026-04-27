@@ -1,4 +1,4 @@
-FROM golang:1.25-alpine AS builder
+FROM golang:1.25.9-alpine AS builder
 
 WORKDIR /build
 
@@ -14,5 +14,7 @@ FROM gcr.io/distroless/static-debian12
 COPY --from=builder /build/ssh-portfolio /ssh-portfolio
 
 EXPOSE 2222
+
+ENV TERM=xterm-256color
 
 ENTRYPOINT ["/ssh-portfolio"]

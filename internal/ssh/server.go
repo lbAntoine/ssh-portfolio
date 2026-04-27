@@ -16,6 +16,18 @@ import (
 	"github.com/lbAntoine/ssh-portfolio/internal/ui/styles"
 )
 
+func makeHandler(c *counter.Counter) bm.Handler {
+	return func(s cssh.Session) (tea.Model, []tea.ProgramOption) {
+		theme := styles.Minimal()
+		n, err := c.Increment()
+		if err != nil {
+			log.Warn("could not increment counter", "err", err)
+			n = 0
+		}
+		return ui.NewApp(theme, n), nil
+	}
+}
+
 // NewServer creates and configure a Wish SSH server on the given address
 // using the provided host key path
 func NewServer(addr, hostKeyPath string, c *counter.Counter) *cssh.Server {
@@ -23,15 +35,7 @@ func NewServer(addr, hostKeyPath string, c *counter.Counter) *cssh.Server {
 		wish.WithAddress(addr),
 		wish.WithHostKeyPath(hostKeyPath),
 		wish.WithMiddleware(
-			bm.Middleware(func(s cssh.Session) (tea.Model, []tea.ProgramOption) {
-				theme := styles.Minimal()
-				n, err := c.Increment()
-				if err != nil {
-					log.Warn("could not increment counter", "err", err)
-					n = 0
-				}
-				return ui.NewApp(theme, n), nil
-			}),
+			bm.Middleware(makeHandler(c)),
 			at.Middleware(),
 			lm.Middleware(),
 		),

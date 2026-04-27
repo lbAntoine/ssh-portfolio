@@ -4,9 +4,9 @@ import (
 	"fmt"
 	"strings"
 
-	tea "charm.land/bubbletea/v2"
 	"charm.land/bubbles/v2/help"
 	"charm.land/bubbles/v2/key"
+	tea "charm.land/bubbletea/v2"
 	"charm.land/lipgloss/v2"
 	"github.com/lbAntoine/ssh-portfolio/internal/ui/sections"
 	"github.com/lbAntoine/ssh-portfolio/internal/ui/styles"
@@ -22,11 +22,11 @@ var sectionNames = []string{
 }
 
 type keyMap struct {
-	Next    key.Binding
-	Prev    key.Binding
-	Jump    key.Binding
-	Help    key.Binding
-	Quit    key.Binding
+	Next key.Binding
+	Prev key.Binding
+	Jump key.Binding
+	Help key.Binding
+	Quit key.Binding
 }
 
 func (k keyMap) ShortHelp() []key.Binding {
@@ -120,6 +120,12 @@ func (m Model) Init() tea.Cmd {
 
 // Update implements tea.Model
 func (m Model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
+	type inputConsumer interface{ InputConsuming() bool }
+	if ic, ok := m.sections[m.active].(inputConsumer); ok && ic.InputConsuming() {
+		updated, cmd := m.sections[m.active].Update(msg)
+		m.sections[m.active] = updated
+		return m, cmd
+	}
 	switch msg := msg.(type) {
 	case tea.WindowSizeMsg:
 		m.width = msg.Width

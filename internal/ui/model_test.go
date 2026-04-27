@@ -109,3 +109,35 @@ func TestRoot_HelpToggleOnQuestionMark(t *testing.T) {
 		t.Error("expected help to be hidden after second '?'")
 	}
 }
+
+func TestModel_Init(t *testing.T) {
+	m := ui.NewModel(styles.Minimal(), 0)
+	if cmd := m.Init(); cmd != nil {
+		t.Error("expected nil Init cmd")
+	}
+}
+
+func TestModel_WindowSizeMsg(t *testing.T) {
+	m := ui.NewModel(styles.Minimal(), 0)
+	next, _ := m.Update(tea.WindowSizeMsg{Width: 120, Height: 40})
+	if next == nil {
+		t.Error("expected non-nil model after WindowSizeMsg")
+	}
+}
+
+func TestModel_CompactView(t *testing.T) {
+	m := ui.NewModel(styles.Minimal(), 0)
+	// width < 60 triggers Compact breakpoint → compact tab bar branch
+	next, _ := m.Update(tea.WindowSizeMsg{Width: 50, Height: 24})
+	if next.(ui.Model).View().Content == "" {
+		t.Error("expected non-empty compact view")
+	}
+}
+
+func TestModel_HelpView(t *testing.T) {
+	m := ui.NewModel(styles.Minimal(), 0)
+	next, _ := m.Update(tea.KeyPressMsg{Code: '?', Text: "?"})
+	if next.(ui.Model).View().Content == "" {
+		t.Error("expected non-empty help overlay view")
+	}
+}
