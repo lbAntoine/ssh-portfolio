@@ -1,8 +1,8 @@
 package sections
 
 import (
-	tea "charm.land/bubbletea/v2"
 	"charm.land/bubbles/v2/list"
+	tea "charm.land/bubbletea/v2"
 	"github.com/lbAntoine/ssh-portfolio/internal/ui/styles"
 )
 
@@ -13,7 +13,7 @@ type projectItem struct {
 	url    string
 }
 
-func (p projectItem) Title() string       { return p.name + "  · " + p.status }
+func (p projectItem) Title() string { return p.name + "  · " + p.status }
 func (p projectItem) Description() string {
 	if p.url != "" {
 		return p.desc + "\n" + p.url

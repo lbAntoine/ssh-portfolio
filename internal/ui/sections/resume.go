@@ -3,8 +3,8 @@ package sections
 import (
 	"strings"
 
-	tea "charm.land/bubbletea/v2"
 	"charm.land/bubbles/v2/viewport"
+	tea "charm.land/bubbletea/v2"
 	"github.com/lbAntoine/ssh-portfolio/internal/ui/styles"
 )
 

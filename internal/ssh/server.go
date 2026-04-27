@@ -5,11 +5,11 @@ import (
 
 	tea "charm.land/bubbletea/v2"
 	"charm.land/log/v2"
-	cssh "github.com/charmbracelet/ssh"
 	"charm.land/wish/v2"
 	at "charm.land/wish/v2/activeterm"
 	bm "charm.land/wish/v2/bubbletea"
 	lm "charm.land/wish/v2/logging"
+	cssh "github.com/charmbracelet/ssh"
 
 	"github.com/lbAntoine/ssh-portfolio/internal/counter"
 	"github.com/lbAntoine/ssh-portfolio/internal/ui"

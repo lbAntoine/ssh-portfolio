@@ -8,6 +8,7 @@ import (
 	"github.com/lbAntoine/ssh-portfolio/internal/ui/styles"
 )
 
+// SplashText and SplashSubtitle are the default content for the typewriter animation.
 const (
 	SplashText     = "antoine le bras"
 	SplashSubtitle = "backend developer"
@@ -59,11 +60,10 @@ func (m Model) Init() tea.Cmd { return tick() }
 
 // Update implements tea.Model
 func (m Model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
-	switch msg.(type) {
+	switch msg := msg.(type) {
 	case tea.WindowSizeMsg:
-		wm := msg.(tea.WindowSizeMsg)
-		m.width = wm.Width
-		m.height = wm.Height
+		m.width = msg.Width
+		m.height = msg.Height
 	case TickMsg:
 		switch m.phase {
 		case phaseMain:

@@ -116,7 +116,7 @@ func (c Contact) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 		switch c.form.State {
 		case huh.StateCompleted:
 			if url := os.Getenv("DISCORD_WEBHOOK_URL"); url != "" {
-				notifier.SendDiscord(url, c.data.name, c.data.email, c.data.message)
+				_ = notifier.SendDiscord(url, c.data.name, c.data.email, c.data.message)
 			}
 			c.state = contactDone
 		case huh.StateAborted:

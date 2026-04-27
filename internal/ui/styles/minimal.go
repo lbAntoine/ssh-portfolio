@@ -15,4 +15,3 @@ func Minimal() Theme {
 		Divider:   "────────────────────────────",
 	}
 }
-
