@@ -2,26 +2,6 @@
   "version": 1,
   "tasks": [
     {
-      "id": "0aa6aef4",
-      "title": "Implement Discord webhook notifier",
-      "description": "New internal/notifier package with SendDiscord(webhookURL, name, message). Wire into contact.go on StateCompleted. URL from DISCORD_WEBHOOK_URL env.",
-      "status": "todo",
-      "priority": "high",
-      "sprint": "C3",
-      "created_at": "2026-04-27T11:31:39Z",
-      "updated_at": "2026-04-27T11:31:39Z"
-    },
-    {
-      "id": "bfde72b1",
-      "title": "Tests for contact form and submission handler",
-      "description": "Unit tests for huh form state transitions and notifier package. Target 80%+ coverage on new code.",
-      "status": "todo",
-      "priority": "high",
-      "sprint": "C4",
-      "created_at": "2026-04-27T11:31:39Z",
-      "updated_at": "2026-04-27T11:31:39Z"
-    },
-    {
       "id": "97b02bf7",
       "title": "Pre-deploy configuration review",
       "description": "Verify Dockerfile, docker-compose.yml, data volume mounts. Check make docker-up works end to end.",
